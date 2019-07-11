@@ -323,7 +323,7 @@ class _RedeemState extends State<Redeem> {
                                               padding:
                                                   EdgeInsets.only(top: 20.0)),
                                           TextFormField(
-                                           // initialValue: reedemer.couponCode,
+                                            // initialValue: reedemer.couponCode,
                                             decoration: InputDecoration(
                                                 labelText:
                                                     "Coupon/Referral code",
@@ -362,7 +362,7 @@ class _RedeemState extends State<Redeem> {
                                                 hintStyle: TextStyle(
                                                     color: Colors.black54)),
                                           ),
-                                           Padding(
+                                          Padding(
                                               padding:
                                                   EdgeInsets.only(top: 20.0)),
                                           TextFormField(
@@ -495,7 +495,8 @@ class buttonBlackBottom extends StatelessWidget {
                 pinController.clear();
                 couponController.clear();
                 amountController.clear();
-                 _callback();
+                refController.clear();
+                _callback();
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -526,7 +527,8 @@ class buttonBlackBottom extends StatelessWidget {
                     builder: (BuildContext context) {
                       return RichAlertDialog(
                         alertTitle: richTitle("Oops! an error occured"),
-                        alertSubtitle: richSubtitle("${addpointsResponseData['message']}"),
+                        alertSubtitle:
+                            richSubtitle("${addpointsResponseData['message']}"),
                         alertType: RichAlertType.ERROR,
                         actions: <Widget>[
                           FlatButton(
@@ -581,8 +583,9 @@ class buttonBlackBottom extends StatelessWidget {
                 pinController.clear();
                 couponController.clear();
                 amountController.clear();
+                refController.clear();
                 //showInSnackBar("Campaign redeemed");
-                 _callback();
+                _callback();
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -606,7 +609,6 @@ class buttonBlackBottom extends StatelessWidget {
                         ],
                       );
                     });
-               
               } else {
                 Navigator.of(context, rootNavigator: true).pop('dialog');
                 showDialog(
@@ -614,7 +616,8 @@ class buttonBlackBottom extends StatelessWidget {
                     builder: (BuildContext context) {
                       return RichAlertDialog(
                         alertTitle: richTitle("Oops! an error occured"),
-                        alertSubtitle: richSubtitle("${redeemResponseData['message']}"),
+                        alertSubtitle:
+                            richSubtitle("${redeemResponseData['message']}"),
                         alertType: RichAlertType.ERROR,
                         actions: <Widget>[
                           FlatButton(
