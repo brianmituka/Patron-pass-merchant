@@ -26,6 +26,7 @@ dependencies:
   date_format: ^1.0.6
   intl: ^0.15.8
   sweet_alert_dialogs: "^0.2.0"
+  flutter_native_timezone: ^1.0.4
    
 
   # The following adds the Cupertino Icons font to your application.
