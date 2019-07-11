@@ -311,6 +311,7 @@ class _RedeemState extends State<Redeem> {
                                           TextFormField(
                                             //initialValue: profilePayload.name,
                                             controller: refController,
+
                                             focusNode: referenceFocusNode,
                                             decoration: InputDecoration(
                                                 labelText: "Reference Number",
@@ -322,7 +323,7 @@ class _RedeemState extends State<Redeem> {
                                               padding:
                                                   EdgeInsets.only(top: 20.0)),
                                           TextFormField(
-                                            initialValue: reedemer.couponCode,
+                                           // initialValue: reedemer.couponCode,
                                             decoration: InputDecoration(
                                                 labelText:
                                                     "Coupon/Referral code",
@@ -337,6 +338,7 @@ class _RedeemState extends State<Redeem> {
                                           TextFormField(
                                             //initialValue: profilePayload.email,
                                             controller: pinController,
+                                            keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
                                                 labelText: "Employee Pin",
                                                 hintText: "Employee Pin",
@@ -353,6 +355,7 @@ class _RedeemState extends State<Redeem> {
                                             //initialValue: profilePayload.name,
                                             controller: amountController,
                                             focusNode: amountFocusNode,
+                                            keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
                                                 labelText: "Amount Spent",
                                                 hintText: "Amount Spent",
@@ -468,6 +471,7 @@ class buttonBlackBottom extends StatelessWidget {
               "amountSpent": amountController.text,
               "couponCode": couponController.text,
               "customerId": reedemer.userId,
+              "referenceNumber": refController.text
             };
             print("CREEEEDE ${addpointsFormData.toString()}");
             print(">>>$accesstoken");
@@ -552,7 +556,8 @@ class buttonBlackBottom extends StatelessWidget {
               //"couponCode": reedemer.couponCode,
               "campaignId": reedemer.campaignId,
               "isCashTransaction": true,
-              "timezone": "Africa/Nairobi"
+              "timezone": "Africa/Nairobi",
+              "referenceNumber": refController.text
             };
             print(campaignRedeemMap.toString());
             _onLoading();
