@@ -5,6 +5,7 @@ import 'dart:convert' as JSON;
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
 final String rewardsUrl = "http://api.patronpass.io/api/reward/purchaseReward";
 final String detailsUrl = 'http://api.patronpass.io/api/users/details/';
@@ -459,7 +460,8 @@ class buttonBlackBottom extends StatelessWidget {
     }
 
     return InkWell(
-        onTap: () {
+        onTap: () async {
+          final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
           // if (!_addpointsFormKey.currentState.validate()) {
           //   return;
           //  }
@@ -476,7 +478,7 @@ class buttonBlackBottom extends StatelessWidget {
             print("CREEEEDE ${addpointsFormData.toString()}");
             print(">>>$accesstoken");
             _onLoading();
-            http
+          await  http
                 .post(rewardsUrl,
                     headers: {
                       "Authorization": "Bearer $accesstoken",
@@ -558,12 +560,12 @@ class buttonBlackBottom extends StatelessWidget {
               //"couponCode": reedemer.couponCode,
               "campaignId": reedemer.campaignId,
               "isCashTransaction": true,
-              "timezone": "Africa/Nairobi",
+              "timezone": currentTimeZone,
               "referenceNumber": refController.text
             };
             print(campaignRedeemMap.toString());
             _onLoading();
-            http
+           await http
                 .post('http://api.patronpass.io/api/reward/campaignRedemption',
                     headers: {
                       "Authorization": "Bearer $accesstoken",
