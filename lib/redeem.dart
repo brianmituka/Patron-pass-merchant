@@ -5,9 +5,8 @@ import 'dart:convert' as JSON;
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:sweet_alert_dialogs/sweet_alert_dialogs.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
-final String rewardsUrl = "http://api.patronpass.io/api/reward/purchaseReward";
-final String detailsUrl = 'http://api.patronpass.io/api/users/details/';
 final logoColour = const Color(0xff2F2092);
 final GlobalKey<FormState> _addpointsFormKey = GlobalKey<FormState>();
 final FocusNode pinFocusNode = FocusNode();
@@ -20,15 +19,24 @@ final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 final FocusNode referenceFocusNode = FocusNode();
 TextEditingController refController = new TextEditingController();
 var accesstoken;
-var name = "";
-var totalSpent = "";
-var points = "";
-var referrals = "";
-var joined = "";
-var updated = "";
+String name = "";
+String totalSpent = "";
+String points = "";
+String referrals = "";
+String joined = "";
+String updated = "";
 var checkins;
 var redemptions;
 
+bool get isInDebugMode {
+  bool inDebugMode = false;
+  assert(inDebugMode = true);
+  return inDebugMode;
+}
+
+String rewardsUrl;
+String detailsUrl;
+String redeemUrl;
 bool reedeem = true;
 var _txtCustomHead = TextStyle(
   color: Colors.black54,
@@ -85,9 +93,23 @@ class _RedeemState extends State<Redeem> {
 
   Future getUserDetails() async {
     final f = new DateFormat('dd-MM-yyy');
+    print("HELOO >> ${reedemer.userId.toString()}");
+    if (isInDebugMode) {
+            rewardsUrl = 'http://vader.patronpass.io/api/reward/purchaseReward';
+            detailsUrl = 'http://vader.patronpass.io/api/users/details/';
+            redeemUrl =
+                'http://vader.patronpass.io/api/reward/campaignRedemption';
+          } else {
+            rewardsUrl =
+                'http://skywalker.patronpass.io/api/reward/purchaseReward';
+            detailsUrl = 'http://skywalker.patronpass.io/api/users/details/';
+            redeemUrl =
+                'http://skywalker.patronpass.io/api/reward/campaignRedemption';
+          }
 
     await _getMerchantToken();
     final String userUrl = detailsUrl + reedemer.userId.toString();
+    print("MDEDDD" + userUrl);
     await http
         .get(userUrl, headers: {"Authorization": "Bearer $accesstoken"}).then(
             (http.Response response) {
@@ -311,6 +333,8 @@ class _RedeemState extends State<Redeem> {
                                           TextFormField(
                                             //initialValue: profilePayload.name,
                                             controller: refController,
+                                            cursorColor: logoColour,
+
                                             focusNode: referenceFocusNode,
                                             decoration: InputDecoration(
                                                 labelText: "Reference Number",
@@ -322,7 +346,8 @@ class _RedeemState extends State<Redeem> {
                                               padding:
                                                   EdgeInsets.only(top: 20.0)),
                                           TextFormField(
-                                            initialValue: reedemer.couponCode,
+                                            cursorColor: logoColour,
+                                            // initialValue: reedemer.couponCode,
                                             decoration: InputDecoration(
                                                 labelText:
                                                     "Coupon/Referral code",
@@ -335,8 +360,10 @@ class _RedeemState extends State<Redeem> {
                                               padding:
                                                   EdgeInsets.only(top: 20.0)),
                                           TextFormField(
+                                            cursorColor: logoColour,
                                             //initialValue: profilePayload.email,
                                             controller: pinController,
+                                            keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
                                                 labelText: "Employee Pin",
                                                 hintText: "Employee Pin",
@@ -350,20 +377,23 @@ class _RedeemState extends State<Redeem> {
                                     : Column(
                                         children: <Widget>[
                                           TextFormField(
+                                            cursorColor: logoColour,
                                             //initialValue: profilePayload.name,
                                             controller: amountController,
                                             focusNode: amountFocusNode,
+                                            keyboardType: TextInputType.number,
                                             decoration: InputDecoration(
                                                 labelText: "Amount Spent",
                                                 hintText: "Amount Spent",
                                                 hintStyle: TextStyle(
                                                     color: Colors.black54)),
                                           ),
-                                           Padding(
+                                          Padding(
                                               padding:
                                                   EdgeInsets.only(top: 20.0)),
                                           TextFormField(
                                             //initialValue: profilePayload.name,
+                                            cursorColor: logoColour,
                                             controller: refController,
                                             focusNode: referenceFocusNode,
                                             decoration: InputDecoration(
@@ -376,6 +406,7 @@ class _RedeemState extends State<Redeem> {
                                               padding:
                                                   EdgeInsets.only(top: 20.0)),
                                           TextFormField(
+                                            cursorColor: logoColour,
                                             initialValue: reedemer.couponCode,
                                             controller: couponController,
                                             focusNode: couponFocusNode,
@@ -394,6 +425,7 @@ class _RedeemState extends State<Redeem> {
                                             //initialValue: profilePayload.email,
                                             controller: pinController,
                                             focusNode: pinFocusNode,
+                                            cursorColor: logoColour,
                                             decoration: InputDecoration(
                                                 labelText: "Employee Pin",
                                                 hintText: "Employee Pin",
@@ -456,10 +488,21 @@ class buttonBlackBottom extends StatelessWidget {
     }
 
     return InkWell(
-        onTap: () {
-          // if (!_addpointsFormKey.currentState.validate()) {
-          //   return;
-          //  }
+        onTap: () async {
+          final String currentTimeZone =
+              await FlutterNativeTimezone.getLocalTimezone();
+          if (isInDebugMode) {
+            rewardsUrl = 'http://vader.patronpass.io/api/reward/purchaseReward';
+            detailsUrl = 'http://vader.patronpass.io/api/users/details/';
+            redeemUrl =
+                'http://vader.patronpass.io/api/reward/campaignRedemption';
+          } else {
+            rewardsUrl =
+                'http://skywalker.patronpass.io/api/reward/purchaseReward';
+            detailsUrl = 'http://skywalker.patronpass.io/api/users/details/';
+            redeemUrl =
+                'http://skywalker.patronpass.io/api/reward/campaignRedemption';
+          }
 
           if (reedemer.type == "points") {
             _addpointsFormKey.currentState.save();
@@ -468,11 +511,12 @@ class buttonBlackBottom extends StatelessWidget {
               "amountSpent": amountController.text,
               "couponCode": couponController.text,
               "customerId": reedemer.userId,
+              "referenceNumber": refController.text
             };
             print("CREEEEDE ${addpointsFormData.toString()}");
             print(">>>$accesstoken");
             _onLoading();
-            http
+            await http
                 .post(rewardsUrl,
                     headers: {
                       "Authorization": "Bearer $accesstoken",
@@ -491,7 +535,8 @@ class buttonBlackBottom extends StatelessWidget {
                 pinController.clear();
                 couponController.clear();
                 amountController.clear();
-                 _callback();
+                refController.clear();
+                _callback();
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -522,7 +567,8 @@ class buttonBlackBottom extends StatelessWidget {
                     builder: (BuildContext context) {
                       return RichAlertDialog(
                         alertTitle: richTitle("Oops! an error occured"),
-                        alertSubtitle: richSubtitle("${addpointsResponseData['message']}"),
+                        alertSubtitle:
+                            richSubtitle("${addpointsResponseData['message']}"),
                         alertType: RichAlertType.ERROR,
                         actions: <Widget>[
                           FlatButton(
@@ -552,12 +598,13 @@ class buttonBlackBottom extends StatelessWidget {
               //"couponCode": reedemer.couponCode,
               "campaignId": reedemer.campaignId,
               "isCashTransaction": true,
-              "timezone": "Africa/Nairobi"
+              "timezone": currentTimeZone,
+              "referenceNumber": refController.text
             };
             print(campaignRedeemMap.toString());
             _onLoading();
-            http
-                .post('http://api.patronpass.io/api/reward/campaignRedemption',
+            await http
+                .post(redeemUrl,
                     headers: {
                       "Authorization": "Bearer $accesstoken",
                       "Content-Type": "application/json"
@@ -576,8 +623,9 @@ class buttonBlackBottom extends StatelessWidget {
                 pinController.clear();
                 couponController.clear();
                 amountController.clear();
+                refController.clear();
                 //showInSnackBar("Campaign redeemed");
-                 _callback();
+                _callback();
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -601,7 +649,6 @@ class buttonBlackBottom extends StatelessWidget {
                         ],
                       );
                     });
-               
               } else {
                 Navigator.of(context, rootNavigator: true).pop('dialog');
                 showDialog(
@@ -609,7 +656,8 @@ class buttonBlackBottom extends StatelessWidget {
                     builder: (BuildContext context) {
                       return RichAlertDialog(
                         alertTitle: richTitle("Oops! an error occured"),
-                        alertSubtitle: richSubtitle("${redeemResponseData['message']}"),
+                        alertSubtitle:
+                            richSubtitle("${redeemResponseData['message']}"),
                         alertType: RichAlertType.ERROR,
                         actions: <Widget>[
                           FlatButton(
